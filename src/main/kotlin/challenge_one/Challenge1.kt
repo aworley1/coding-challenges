@@ -34,7 +34,7 @@ private fun moveRemainingTimeIntoUnit(
     )
 
     val remainingSeconds =
-        currentUnitsAndRemainingTime.remainingSeconds - (timeUnitAndNumberOfThem.numberOfThem * timeUnitAndNumberOfThem.timeUnit.seconds)
+        currentUnitsAndRemainingTime.remainingSeconds - timeUnitAndNumberOfThem.totalSeconds
 
     return UnitsAndRemainingTime(
         remainingSeconds = remainingSeconds,
@@ -53,6 +53,9 @@ data class TimeUnitAndNumberOfThem(val timeUnit: TimeUnit, val numberOfThem: Int
                 else -> "$numberOfThem ${timeUnit.plural}"
             }
         }
+
+    val totalSeconds: Int
+        get() = numberOfThem * timeUnit.seconds
 }
 
 fun List<String>.joinWithCommaThenAnd(): String {
