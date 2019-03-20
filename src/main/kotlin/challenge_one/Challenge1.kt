@@ -15,29 +15,31 @@ enum class TimeUnit(val seconds: Int, val singular: String, val plural: String) 
 fun formatTime(seconds: Int): String {
     if (seconds == 0) return "none"
 
-    val timeAccumulator = AccumulatedTimeInUnits(seconds, emptyList())
+    val unitsAndRemainingTime = UnitsAndRemainingTime(seconds, emptyList())
 
     return TimeUnit.values()
-        .fold(timeAccumulator, accumulateRemainingTime())
+        .fold(unitsAndRemainingTime, ::moveRemainingTimeIntoUnit)
         .unitsAndNumberOfThem
         .mapNotNull { it.formatted }
         .joinWithCommaThenAnd()
 }
 
-private fun accumulateRemainingTime(): (AccumulatedTimeInUnits, TimeUnit) -> AccumulatedTimeInUnits {
-    return fun(acc: AccumulatedTimeInUnits, timeUnit: TimeUnit): AccumulatedTimeInUnits {
-        val timeUnitAndNumberOfThem = TimeUnitAndNumberOfThem(timeUnit, timeUnit.howMany(acc.remainingSeconds))
-        val remainingSeconds =
-            acc.remainingSeconds - (timeUnitAndNumberOfThem.numberOfThem * timeUnitAndNumberOfThem.timeUnit.seconds)
+private fun moveRemainingTimeIntoUnit(
+    currentUnitsAndRemainingTime: UnitsAndRemainingTime,
+    timeUnit: TimeUnit
+): UnitsAndRemainingTime {
+    val timeUnitAndNumberOfThem =
+        TimeUnitAndNumberOfThem(timeUnit, timeUnit.howMany(currentUnitsAndRemainingTime.remainingSeconds))
+    val remainingSeconds =
+        currentUnitsAndRemainingTime.remainingSeconds - (timeUnitAndNumberOfThem.numberOfThem * timeUnitAndNumberOfThem.timeUnit.seconds)
 
-        return AccumulatedTimeInUnits(
-            remainingSeconds = remainingSeconds,
-            unitsAndNumberOfThem = acc.unitsAndNumberOfThem + timeUnitAndNumberOfThem
-        )
-    }
+    return UnitsAndRemainingTime(
+        remainingSeconds = remainingSeconds,
+        unitsAndNumberOfThem = currentUnitsAndRemainingTime.unitsAndNumberOfThem + timeUnitAndNumberOfThem
+    )
 }
 
-data class AccumulatedTimeInUnits(val remainingSeconds: Int, val unitsAndNumberOfThem: List<TimeUnitAndNumberOfThem>)
+data class UnitsAndRemainingTime(val remainingSeconds: Int, val unitsAndNumberOfThem: List<TimeUnitAndNumberOfThem>)
 
 data class TimeUnitAndNumberOfThem(val timeUnit: TimeUnit, val numberOfThem: Int) {
     val formatted: String?
