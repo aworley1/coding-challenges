@@ -44,9 +44,11 @@ data class UnitsAndRemainingTime(val remainingSeconds: Int, val unitsAndNumberOf
 data class TimeUnitAndNumberOfThem(val timeUnit: TimeUnit, val numberOfThem: Int) {
     val formatted: String?
         get() {
-            if (numberOfThem == 0) return null
-            return if (numberOfThem == 1) "$numberOfThem ${timeUnit.singular}"
-            else "$numberOfThem ${timeUnit.plural}"
+            return when {
+                numberOfThem == 0 -> null
+                numberOfThem == 1 -> "$numberOfThem ${timeUnit.singular}"
+                else -> "$numberOfThem ${timeUnit.plural}"
+            }
         }
 }
 
