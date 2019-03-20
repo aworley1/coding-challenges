@@ -16,11 +16,12 @@ fun formatTime(seconds: Int): String {
     if (seconds == 0) return "none"
 
     val timeAccumulator = AccumulatedTimeInUnits(seconds, emptyList())
+
     return TimeUnit.values()
         .fold(timeAccumulator, accumulateRemainingTime())
         .unitsAndNumberOfThem
         .mapNotNull { it.formatted }
-        .joinToString(", ")
+        .joinWithCommaThenAnd()
 }
 
 private fun accumulateRemainingTime(): (AccumulatedTimeInUnits, TimeUnit) -> AccumulatedTimeInUnits {
@@ -45,4 +46,16 @@ data class TimeUnitAndNumberOfThem(val timeUnit: TimeUnit, val numberOfThem: Int
             return if (numberOfThem == 1) "$numberOfThem ${timeUnit.singular}"
             else "$numberOfThem ${timeUnit.plural}"
         }
+}
+
+fun List<String>.joinWithCommaThenAnd(): String {
+    return this.mapIndexed { index, s ->
+        when {
+            index == this.size - 1 -> listOf(s)
+            index == this.size - 2 -> listOf(s, " and ")
+            else -> listOf(s, ", ")
+        }
+    }
+        .flatten()
+        .joinToString("")
 }

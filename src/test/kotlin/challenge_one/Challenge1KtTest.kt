@@ -25,17 +25,17 @@ internal class Challenge1KtTest {
     }
 
     @Test
-    fun `should return 1 minute, 30 seconds`() {
-        assertEquals("1 minute, 30 seconds", formatTime(90))
+    fun `should return 1 minute and 30 seconds`() {
+        assertEquals("1 minute and 30 seconds", formatTime(90))
     }
 
     @Test
-    fun `should return 1 hour, 1 second`() {
-        assertEquals("1 hour, 1 second", formatTime(3601))
+    fun `should return 1 hour and 1 second`() {
+        assertEquals("1 hour and 1 second", formatTime(3601))
     }
 
     @Test
-    fun `should return 1 year, 3 days, 2 seconds`() {
-        assertEquals("1 year, 3 days, 2 seconds", formatTime(31795202))
+    fun `should return 1 year, 3 days and 2 seconds`() {
+        assertEquals("1 year, 3 days and 2 seconds", formatTime(31795202))
     }
 }
