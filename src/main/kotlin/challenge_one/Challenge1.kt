@@ -13,12 +13,14 @@ enum class TimeUnit(val seconds: Int, val singular: String, val plural: String) 
 }
 
 fun formatTime(seconds: Int): String {
+    if (seconds == 0) return "none"
+
     val timeAccumulator = AccumulatedTimeInUnits(seconds, emptyList())
     return TimeUnit.values()
         .fold(timeAccumulator, accumulateRemainingTime())
         .unitsAndNumberOfThem
         .mapNotNull { it.formatted }
-        .joinToString(" ")
+        .joinToString(", ")
 }
 
 private fun accumulateRemainingTime(): (AccumulatedTimeInUnits, TimeUnit) -> AccumulatedTimeInUnits {
