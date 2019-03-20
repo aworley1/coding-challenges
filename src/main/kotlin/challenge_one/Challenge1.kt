@@ -28,8 +28,11 @@ private fun moveRemainingTimeIntoUnit(
     currentUnitsAndRemainingTime: UnitsAndRemainingTime,
     timeUnit: TimeUnit
 ): UnitsAndRemainingTime {
-    val timeUnitAndNumberOfThem =
-        TimeUnitAndNumberOfThem(timeUnit, timeUnit.howMany(currentUnitsAndRemainingTime.remainingSeconds))
+    val timeUnitAndNumberOfThem = TimeUnitAndNumberOfThem(
+        timeUnit = timeUnit,
+        numberOfThem = timeUnit.howMany(currentUnitsAndRemainingTime.remainingSeconds)
+    )
+
     val remainingSeconds =
         currentUnitsAndRemainingTime.remainingSeconds - (timeUnitAndNumberOfThem.numberOfThem * timeUnitAndNumberOfThem.timeUnit.seconds)
 
