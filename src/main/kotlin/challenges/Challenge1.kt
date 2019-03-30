@@ -1,4 +1,4 @@
-package challenge_one
+package challenges
 
 enum class TimeUnit(val seconds: Int, val singular: String, val plural: String) {
     YEAR(31536000, "year", "years"),

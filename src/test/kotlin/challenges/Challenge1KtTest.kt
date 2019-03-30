@@ -1,4 +1,4 @@
-package challenge_one
+package challenges
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
