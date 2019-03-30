@@ -33,9 +33,9 @@ internal class Challenge2KtTest {
     }
 
     @Test
-    fun `should fix label`() {
+    fun `should fix label for was now`() {
         val originalLabel = "Was £4, now £6"
 
-        assertEquals("needs to be fixed", fixPriceLabel(originalLabel))
+        assertEquals("now £6", fixPriceLabel(originalLabel))
     }
 }

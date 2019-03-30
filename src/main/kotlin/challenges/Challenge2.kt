@@ -1,5 +1,7 @@
 package challenges
 
+import java.math.BigDecimal
+
 fun fixPriceLabel(original: String): String {
     val regex = "(?<=£)(.*?)(?=,|\$)".toRegex()
 
@@ -9,5 +11,9 @@ fun fixPriceLabel(original: String): String {
 
     if (prices == sortedPrices) return original
 
-    return "needs to be fixed"
+    return buildOutput(prices)
+}
+
+fun buildOutput(amounts: List<BigDecimal>): String {
+    return "now £${amounts.last().toString()}"
 }
