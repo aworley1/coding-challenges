@@ -24,7 +24,7 @@ fun processSokobanMove(board: List<String>, move: Char): List<String> {
     val newColOfPlayer = colOfPlayer + direction.horizontalMovement
     val newRowOfPlayer = rowOfPlayer + direction.verticalMovement
 
-    if (board[newRowOfPlayer][newColOfPlayer] == '#') return board
+    if (moveIsIllegal(board, newRowOfPlayer, newColOfPlayer)) return board
 
     return board.map { it.replace(playerCharacter, ' ') }
         .mapIndexed { index, row ->
@@ -38,6 +38,21 @@ fun processSokobanMove(board: List<String>, move: Char): List<String> {
                 row
             }
         }
+}
+
+private fun moveIsIllegal(
+    board: List<String>,
+    newRowOfPlayer: Int,
+    newColOfPlayer: Int
+): Boolean {
+    return when {
+        newColOfPlayer >= board[0].length -> true
+        newColOfPlayer < 0 -> true
+        newRowOfPlayer >= board.size -> true
+        newRowOfPlayer < 0 -> true
+        board[newRowOfPlayer][newColOfPlayer] == '#' -> true
+        else -> false
+    }
 }
 
 fun findPlayerCharacter(board: List<String>): Char {

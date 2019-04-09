@@ -2,10 +2,10 @@ package challenge_three
 
 fun main() {
     val initialBoard = listOf(
-        "########",
-        "#  p   #",
-        "#      #",
-        "########"
+        "        ",
+        "   p    ",
+        "        ",
+        "        "
     )
 
     var board = initialBoard

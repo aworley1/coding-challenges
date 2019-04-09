@@ -116,7 +116,7 @@ internal class Challenge3KtTest {
 
         assertEquals(expectedResult, result)
     }
-    
+
     @Test
     fun `should not move into a wall`() {
         val input = listOf(
@@ -131,5 +131,55 @@ internal class Challenge3KtTest {
         assertEquals(input, result)
     }
 
+    @Test
+    fun `should not move off the right side of the board`() {
+        val input = listOf(
+            "   ",
+            "  p",
+            "   "
+        )
 
+        val result = processSokobanMove(input, 'R')
+
+        assertEquals(input, result)
+    }
+
+    @Test
+    fun `should not move off the left side of the board`() {
+        val input = listOf(
+            "   ",
+            "p  ",
+            "   "
+        )
+
+        val result = processSokobanMove(input, 'L')
+
+        assertEquals(input, result)
+    }
+
+    @Test
+    fun `should not move off the top of the board`() {
+        val input = listOf(
+            "p  ",
+            "   ",
+            "   "
+        )
+
+        val result = processSokobanMove(input, 'U')
+
+        assertEquals(input, result)
+    }
+
+    @Test
+    fun `should not move off the bottom of the board`() {
+        val input = listOf(
+            "   ",
+            "   ",
+            "p  "
+        )
+
+        val result = processSokobanMove(input, 'D')
+
+        assertEquals(input, result)
+    }
 }
