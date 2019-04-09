@@ -61,5 +61,47 @@ internal class Challenge3KtTest {
         assertEquals(expectedResult, result)
     }
 
+    @Test
+    fun `should move one square left when there is space`() {
+        val input = listOf(
+            "########",
+            "#  p   #",
+            "#      #",
+            "########"
+        )
+
+        val result = processSokobanMove(input, 'L')
+
+        val expectedResult = listOf(
+            "########",
+            "# p    #",
+            "#      #",
+            "########"
+        )
+
+        assertEquals(expectedResult, result)
+    }
+
+    @Test
+    fun `should move one square right when there is space`() {
+        val input = listOf(
+            "########",
+            "#  p   #",
+            "#      #",
+            "########"
+        )
+
+        val result = processSokobanMove(input, 'R')
+
+        val expectedResult = listOf(
+            "########",
+            "#   p  #",
+            "#      #",
+            "########"
+        )
+
+        assertEquals(expectedResult, result)
+    }
+
 
 }
