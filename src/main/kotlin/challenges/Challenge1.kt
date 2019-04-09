@@ -20,7 +20,7 @@ fun formatTime(seconds: Int): String {
     return TimeUnit.values()
         .fold(unitsAndRemainingTime, ::moveRemainingTimeIntoUnit)
         .unitsAndNumberOfThem
-        .mapNotNull { it.formatted }
+        .mapNotNull { it.formatted() }
         .joinWithCommaThenAnd()
 }
 
@@ -45,13 +45,11 @@ private fun moveRemainingTimeIntoUnit(
 data class UnitsAndRemainingTime(val remainingSeconds: Int, val unitsAndNumberOfThem: List<TimeUnitAndNumberOfThem>)
 
 data class TimeUnitAndNumberOfThem(val timeUnit: TimeUnit, val numberOfThem: Int) {
-    val formatted: String?
-        get() {
-            return when {
-                numberOfThem == 0 -> null
-                numberOfThem == 1 -> "$numberOfThem ${timeUnit.singular}"
-                else -> "$numberOfThem ${timeUnit.plural}"
-            }
+    fun formatted() =
+        when {
+            numberOfThem == 0 -> null
+            numberOfThem == 1 -> "$numberOfThem ${timeUnit.singular}"
+            else -> "$numberOfThem ${timeUnit.plural}"
         }
 
     val totalSeconds: Int

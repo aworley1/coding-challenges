@@ -1,0 +1,21 @@
+In this challenge we are creating a Sokoban game, or at least a function that processes moves called processSokobanMove().
+
+The game is played on a board of squares, where each square is a floor or a wall. Some floor squares contain boxes, and some floor squares are marked as storage locations.
+
+The player is confined to the board, and may move horizontally or vertically onto empty squares (never through walls or boxes). The player can also move into a box, which pushes it into the square beyond. Boxes may not be pushed into other boxes or walls, and they cannot be pulled. The number of boxes is equal to the number of storage locations. The puzzle is solved when all boxes are at storage locations.
+
+The function takes two parameters: - An array of strings. Each string is a row on the board and each character in the string represents a square. Walls are represented using “#” and storage locations are represented using “*“. Boxes are represented with “b”, or “B” if on a storage location. The player is represented by “p” or “P” if on a storage location. Any other characters represent an empty square, but I would expect them to contain spaces. - A string representing the direction the player wants to move. It’s value is any of “U” (for Up), “D” (for Down), “L” (for left) and “R” (for right).
+
+The function returns a new copy of the board showing the player and boxes in new positions as an array of strings following the same convention as the input. If an illegal move is attempted then the board is returned unchanged. The board should be boardered by walls, but assume anything outside the bounds of the input array to be a wall. Example input for the board could be:
+
+["#############",
+ "#p        * #",
+ "#     b  b  #",
+ "# *         #",
+ "#############",
+]
+If you are feeling adventurous you could also create a function called puzzleIsSolved which accepts a game board as an array of strings as input and returns a boolean value of true if the puzzle is solved. If you are feeling even more adventurous you could use the function to create a puzzle you could play for real, even if its just at the command line.
+
+For languages that require wrapping functions in classes, such as Java, please call the class “Challenge3” so its easy to find the function.
+
+Entries should be returned by 29th April.
