@@ -20,6 +20,20 @@ internal class Challenge3KtTest {
     }
 
     @Test
+    fun `should return original board if move is not a valid character`() {
+        val input = listOf(
+            "########",
+            "########",
+            "###p####",
+            "########"
+        )
+
+        val result = processSokobanMove(input, 'Z')
+
+        assertEquals(input, result)
+    }
+
+    @Test
     fun `should move one square up when there is space`() {
         val input = listOf(
             "########",

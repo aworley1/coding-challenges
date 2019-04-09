@@ -7,14 +7,16 @@ enum class Direction(val code: Char, val verticalMovement: Int, val horizontalMo
     RIGHT('R', 0, 1);
 
     companion object {
-        fun of(code: Char): Direction {
-            return Direction.values().single { it.code == code }
+        fun of(code: Char): Direction? {
+            return Direction.values().firstOrNull { it.code == code }
         }
     }
 }
 
 fun processSokobanMove(board: List<String>, move: Char): List<String> {
     val direction = Direction.of(move)
+    if (direction == null) return board
+
     val rowWithPlayer = board.indexOfFirst { it.contains('p') }
     val colOfPlayer = board[rowWithPlayer].indexOf('p')
 
