@@ -14,22 +14,34 @@ enum class Direction(val code: Char, val verticalMovement: Int, val horizontalMo
 }
 
 fun processSokobanMove(board: List<String>, move: Char): List<String> {
-    val direction = Direction.of(move)
-    if (direction == null) return board
+    val direction = Direction.of(move.toUpperCase()) ?: return board
 
-    val rowWithPlayer = board.indexOfFirst { it.contains('p') }
-    val colOfPlayer = board[rowWithPlayer].indexOf('p')
+    val playerCharacter = findPlayerCharacter(board)
 
-    return board.map { it.replace('p', ' ') }
+    val rowWithPlayer = findPlayerRow(board)
+    val colOfPlayer = findPlayerColumn(board, rowWithPlayer)
+
+    return board.map { it.replace(playerCharacter, ' ') }
         .mapIndexed { index, row ->
             if (index == rowWithPlayer + direction.verticalMovement) {
                 row.replaceRange(
-                    colOfPlayer + direction.horizontalMovement,
-                    colOfPlayer + direction.horizontalMovement + 1,
-                    "p"
+                    startIndex = colOfPlayer + direction.horizontalMovement,
+                    endIndex = colOfPlayer + direction.horizontalMovement + 1,
+                    replacement = playerCharacter.toString()
                 )
             } else {
                 row
             }
         }
 }
+
+fun findPlayerCharacter(board: List<String>): Char {
+    val possiblePlayers = listOf('p')
+
+    return board.joinToString("").first { possiblePlayers.contains(it) }
+}
+
+private fun findPlayerColumn(board: List<String>, rowWithPlayer: Int) =
+    board[rowWithPlayer].indexOf('p')
+
+private fun findPlayerRow(board: List<String>) = board.indexOfFirst { it.contains('p') }
