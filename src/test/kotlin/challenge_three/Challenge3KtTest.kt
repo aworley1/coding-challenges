@@ -116,6 +116,20 @@ internal class Challenge3KtTest {
 
         assertEquals(expectedResult, result)
     }
+    
+    @Test
+    fun `should not move into a wall`() {
+        val input = listOf(
+            "########",
+            "#  p   #",
+            "#      #",
+            "########"
+        )
+
+        val result = processSokobanMove(input, 'U')
+
+        assertEquals(input, result)
+    }
 
 
 }

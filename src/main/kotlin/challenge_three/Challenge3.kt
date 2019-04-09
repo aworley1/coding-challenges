@@ -18,15 +18,20 @@ fun processSokobanMove(board: List<String>, move: Char): List<String> {
 
     val playerCharacter = findPlayerCharacter(board)
 
-    val rowWithPlayer = findPlayerRow(board)
-    val colOfPlayer = findPlayerColumn(board, rowWithPlayer)
+    val rowOfPlayer = findPlayerRow(board)
+    val colOfPlayer = findPlayerColumn(board, rowOfPlayer)
+
+    val newColOfPlayer = colOfPlayer + direction.horizontalMovement
+    val newRowOfPlayer = rowOfPlayer + direction.verticalMovement
+
+    if (board[newRowOfPlayer][newColOfPlayer] == '#') return board
 
     return board.map { it.replace(playerCharacter, ' ') }
         .mapIndexed { index, row ->
-            if (index == rowWithPlayer + direction.verticalMovement) {
+            if (index == newRowOfPlayer) {
                 row.replaceRange(
-                    startIndex = colOfPlayer + direction.horizontalMovement,
-                    endIndex = colOfPlayer + direction.horizontalMovement + 1,
+                    startIndex = newColOfPlayer,
+                    endIndex = newColOfPlayer + 1,
                     replacement = playerCharacter.toString()
                 )
             } else {
