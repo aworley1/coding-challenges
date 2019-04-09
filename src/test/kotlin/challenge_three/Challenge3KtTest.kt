@@ -182,4 +182,23 @@ internal class Challenge3KtTest {
 
         assertEquals(input, result)
     }
+
+    @Test
+    fun `should move player onto a storage location`() {
+        val input = listOf(
+            "   ",
+            "   ",
+            "p* "
+        )
+
+        val result = processSokobanMove(input, 'R')
+
+        val expectedResult = listOf(
+            "   ",
+            "   ",
+            " P "
+        )
+
+        assertEquals(expectedResult, result)
+    }
 }

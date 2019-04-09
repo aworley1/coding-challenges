@@ -26,13 +26,16 @@ fun processSokobanMove(board: List<String>, move: Char): List<String> {
 
     if (moveIsIllegal(board, newRowOfPlayer, newColOfPlayer)) return board
 
+    val valueOfNewPosition = board[newRowOfPlayer][newColOfPlayer]
+    val newPlayerCharacter = if (valueOfNewPosition == '*') 'P' else 'p'
+
     return board.map { it.replace(playerCharacter, ' ') }
         .mapIndexed { index, row ->
             if (index == newRowOfPlayer) {
                 row.replaceRange(
                     startIndex = newColOfPlayer,
                     endIndex = newColOfPlayer + 1,
-                    replacement = playerCharacter.toString()
+                    replacement = newPlayerCharacter.toString()
                 )
             } else {
                 row
