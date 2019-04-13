@@ -1,7 +1,5 @@
 package challenge_three
 
-import java.lang.IllegalArgumentException
-
 enum class Direction(val code: Char, val verticalMovement: Int, val horizontalMovement: Int) {
     UP('U', -1, 0),
     DOWN('D', 1, 0),
@@ -13,6 +11,37 @@ enum class Direction(val code: Char, val verticalMovement: Int, val horizontalMo
             return Direction.values().firstOrNull { it.code == code }
         }
     }
+}
+
+data class Board(val rows: List<Row>) {
+    fun toArray(): List<String> {
+        return rows.map {
+            it.squares
+                .map { it.toString() }
+                .joinToString("")
+        }
+    }
+}
+
+data class Row(val squares: List<Square>)
+
+data class Square(val types: List<SquareType> = emptyList()) {
+    override fun toString(): String {
+        return when {
+            types.isEmpty() -> " "
+            types.containsAll(listOf(SquareType.PLAYER, SquareType.STORAGE_LOCATION)) -> "P"
+            types.contains(SquareType.STORAGE_LOCATION) -> "*"
+            types.contains(SquareType.PLAYER) -> "p"
+            types.contains(SquareType.WALL) -> "#"
+            else -> "?"
+        }
+    }
+}
+
+enum class SquareType {
+    PLAYER,
+    WALL,
+    STORAGE_LOCATION
 }
 
 fun processSokobanMove(board: List<String>, move: Char): List<String> {
