@@ -21,6 +21,13 @@ data class Board(val rows: List<Row>) {
                 .joinToString("")
         }
     }
+
+    companion object {
+        fun from(input: List<String>): Board {
+            val rows = input.map { Row(it.toCharArray().map { Square.from(it) }) }
+            return Board(rows)
+        }
+    }
 }
 
 data class Row(val squares: List<Square>)
@@ -36,12 +43,19 @@ data class Square(val types: List<SquareType> = emptyList()) {
             else -> "?"
         }
     }
+
+    companion object {
+        fun from(square: Char): Square {
+            val types = SquareType.values().filter { it.codes.contains(square) }
+            return Square(types)
+        }
+    }
 }
 
-enum class SquareType {
-    PLAYER,
-    WALL,
-    STORAGE_LOCATION
+enum class SquareType(val codes: List<Char>) {
+    PLAYER(listOf('p', 'P')),
+    WALL(listOf('#')),
+    STORAGE_LOCATION(listOf('*', 'P'))
 }
 
 fun processSokobanMove(board: List<String>, move: Char): List<String> {

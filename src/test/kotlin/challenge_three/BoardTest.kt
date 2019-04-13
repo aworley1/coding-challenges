@@ -23,6 +23,26 @@ internal class BoardTest {
 
         assertEquals(expectedResult, result)
     }
+
+    @Test
+    fun `should create a board from a list of strings`() {
+        val input = listOf(
+            " *P",
+            " # "
+        )
+
+        val result = Board.from(input)
+
+        assertEquals(
+            listOf(Square(), Square(listOf(STORAGE_LOCATION)), Square(listOf(PLAYER, STORAGE_LOCATION))),
+            result.rows[0].squares
+        )
+
+        assertEquals(
+            listOf(Square(), Square(listOf(WALL)), Square()),
+            result.rows[1].squares
+        )
+    }
 }
 
 internal class SquareTest {
@@ -59,5 +79,30 @@ internal class SquareTest {
         val square = Square(listOf(WALL))
 
         assertEquals("#", square.toString())
+    }
+
+    @Test
+    fun `should parse empty square`() {
+        assertEquals(Square(), Square.from(' '))
+    }
+
+    @Test
+    fun `should parse square with wall`() {
+        assertEquals(Square(listOf(WALL)), Square.from('#'))
+    }
+
+    @Test
+    fun `should parse square with player`() {
+        assertEquals(Square(listOf(PLAYER)), Square.from('p'))
+    }
+
+    @Test
+    fun `should parse square with player and storage location`() {
+        assertEquals(Square(listOf(PLAYER, STORAGE_LOCATION)), Square.from('P'))
+    }
+
+    @Test
+    fun `should parse square with storage location`() {
+        assertEquals(Square(listOf(STORAGE_LOCATION)), Square.from('*'))
     }
 }
