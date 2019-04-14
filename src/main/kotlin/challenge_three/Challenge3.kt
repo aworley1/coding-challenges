@@ -32,30 +32,31 @@ data class Board(val rows: List<Row>) {
 
 data class Row(val squares: List<Square>)
 
-data class Square(val types: List<SquareType> = emptyList()) {
+data class Square(val type: SquareType = SquareType.EMPTY) {
     override fun toString(): String {
-        return when {
-            types.isEmpty() -> " "
-            types.containsAll(listOf(SquareType.PLAYER, SquareType.STORAGE_LOCATION)) -> "P"
-            types.contains(SquareType.STORAGE_LOCATION) -> "*"
-            types.contains(SquareType.PLAYER) -> "p"
-            types.contains(SquareType.WALL) -> "#"
-            else -> "?"
+        return when (type) {
+            SquareType.STORAGE_LOCATION_WITH_PLAYER -> "P"
+            SquareType.STORAGE_LOCATION -> "*"
+            SquareType.PLAYER -> "p"
+            SquareType.WALL -> "#"
+            SquareType.EMPTY -> " "
         }
     }
 
     companion object {
         fun from(square: Char): Square {
-            val types = SquareType.values().filter { it.codes.contains(square) }
-            return Square(types)
+            val type = SquareType.values().single { it.code == square }
+            return Square(type)
         }
     }
 }
 
-enum class SquareType(val codes: List<Char>) {
-    PLAYER(listOf('p', 'P')),
-    WALL(listOf('#')),
-    STORAGE_LOCATION(listOf('*', 'P'))
+enum class SquareType(val code: Char) {
+    EMPTY(' '),
+    PLAYER('p'),
+    WALL('#'),
+    STORAGE_LOCATION('*'),
+    STORAGE_LOCATION_WITH_PLAYER('P')
 }
 
 fun processSokobanMove(board: List<String>, move: Char): List<String> {

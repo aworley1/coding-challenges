@@ -9,8 +9,8 @@ internal class BoardTest {
     fun `should return board as array of string rows`() {
         val board = Board(
             listOf(
-                Row(listOf(Square(), Square(listOf(STORAGE_LOCATION)), Square(listOf(STORAGE_LOCATION, PLAYER)))),
-                Row(listOf(Square(), Square(listOf(WALL)), Square()))
+                Row(listOf(Square(), Square(STORAGE_LOCATION), Square(STORAGE_LOCATION_WITH_PLAYER))),
+                Row(listOf(Square(), Square(WALL), Square()))
             )
         )
 
@@ -34,12 +34,12 @@ internal class BoardTest {
         val result = Board.from(input)
 
         assertEquals(
-            listOf(Square(), Square(listOf(STORAGE_LOCATION)), Square(listOf(PLAYER, STORAGE_LOCATION))),
+            listOf(Square(), Square(STORAGE_LOCATION), Square(STORAGE_LOCATION_WITH_PLAYER)),
             result.rows[0].squares
         )
 
         assertEquals(
-            listOf(Square(), Square(listOf(WALL)), Square()),
+            listOf(Square(), Square(WALL), Square()),
             result.rows[1].squares
         )
     }
@@ -55,28 +55,28 @@ internal class SquareTest {
 
     @Test
     fun `should convert player square to string`() {
-        val square = Square(listOf(PLAYER))
+        val square = Square(PLAYER)
 
         assertEquals("p", square.toString())
     }
 
     @Test
     fun `should convert storage location square to string`() {
-        val square = Square(listOf(STORAGE_LOCATION))
+        val square = Square(STORAGE_LOCATION)
 
         assertEquals("*", square.toString())
     }
 
     @Test
     fun `should convert storage location and player square to string`() {
-        val square = Square(listOf(STORAGE_LOCATION, PLAYER))
+        val square = Square(STORAGE_LOCATION_WITH_PLAYER)
 
         assertEquals("P", square.toString())
     }
 
     @Test
     fun `should convert wall square to string`() {
-        val square = Square(listOf(WALL))
+        val square = Square(WALL)
 
         assertEquals("#", square.toString())
     }
@@ -88,21 +88,21 @@ internal class SquareTest {
 
     @Test
     fun `should parse square with wall`() {
-        assertEquals(Square(listOf(WALL)), Square.from('#'))
+        assertEquals(Square(WALL), Square.from('#'))
     }
 
     @Test
     fun `should parse square with player`() {
-        assertEquals(Square(listOf(PLAYER)), Square.from('p'))
+        assertEquals(Square(PLAYER), Square.from('p'))
     }
 
     @Test
     fun `should parse square with player and storage location`() {
-        assertEquals(Square(listOf(PLAYER, STORAGE_LOCATION)), Square.from('P'))
+        assertEquals(Square(STORAGE_LOCATION_WITH_PLAYER), Square.from('P'))
     }
 
     @Test
     fun `should parse square with storage location`() {
-        assertEquals(Square(listOf(STORAGE_LOCATION)), Square.from('*'))
+        assertEquals(Square(STORAGE_LOCATION), Square.from('*'))
     }
 }
