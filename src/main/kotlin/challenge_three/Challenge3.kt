@@ -1,5 +1,7 @@
 package challenge_three
 
+import challenge_three.SquareType.*
+
 enum class Direction(val code: Char, val verticalMovement: Int, val horizontalMovement: Int) {
     UP('U', -1, 0),
     DOWN('D', 1, 0),
@@ -20,6 +22,18 @@ data class Board(val rows: List<Row>) {
                 .map { it.toString() }
                 .joinToString("")
         }
+    }
+
+    fun getHeight(): Int {
+        return rows.size
+    }
+
+    fun getWidth(): Int {
+        return rows[0].squares.size
+    }
+
+    operator fun get(row: Int, column: Int): Square {
+        return rows[row].squares[column]
     }
 
     companion object {
@@ -57,26 +71,26 @@ enum class SquareType(val code: Char, val isPlayer: Boolean) {
     }
 }
 
-fun processSokobanMove(board: List<String>, move: Char): List<String> {
-    val parsedBoard = Board.from(board)
-    val direction = Direction.of(move.toUpperCase()) ?: return parsedBoard.toArray()
+fun processSokobanMove(input: List<String>, move: Char): List<String> {
+    val board = Board.from(input)
+    val direction = Direction.of(move.toUpperCase()) ?: return board.toArray()
 
-    val playerCharacter = findPlayerSquareType(parsedBoard).code
+    val playerCharacter = findPlayerSquareType(board)
 
-    val rowOfPlayer = findPlayerRow(parsedBoard)
-    val colOfPlayer = findPlayerColumn(board, rowOfPlayer, playerCharacter)
+    val rowOfPlayer = findPlayerRow(board)
+    val colOfPlayer = findPlayerColumn(board, rowOfPlayer)
 
     val newColOfPlayer = colOfPlayer + direction.horizontalMovement
     val newRowOfPlayer = rowOfPlayer + direction.verticalMovement
 
-    if (moveIsIllegal(board, newRowOfPlayer, newColOfPlayer)) return board
+    if (moveIsIllegal(board, newRowOfPlayer, newColOfPlayer)) return board.toArray()
 
-    val valueOfNewPosition = board[newRowOfPlayer][newColOfPlayer]
-    val newPlayerCharacter = newPlayerCharacter(valueOfNewPosition, playerCharacter)
+    val valueOfNewPosition = board[newRowOfPlayer,newColOfPlayer].type
+    val newPlayerCharacter = newPlayerCharacter(valueOfNewPosition)
 
     val replacementForOldPlayerCharacter = replacementForOldPlayerCharacter(playerCharacter)
 
-    return board.map { it.replace(playerCharacter, replacementForOldPlayerCharacter) }
+    return board.toArray().map { it.replace(playerCharacter.code, replacementForOldPlayerCharacter.code) }
         .mapIndexed { index, row ->
             if (index == newRowOfPlayer) {
                 row.replaceRange(
@@ -90,32 +104,32 @@ fun processSokobanMove(board: List<String>, move: Char): List<String> {
         }
 }
 
-private fun replacementForOldPlayerCharacter(playerCharacter: Char): Char {
+private fun replacementForOldPlayerCharacter(playerCharacter: SquareType): SquareType {
     return when (playerCharacter) {
-        'p' -> ' '
-        'P' -> '*'
-        else -> throw IllegalArgumentException("Undefined Player Character")
+        PLAYER -> EMPTY
+        STORAGE_LOCATION_WITH_PLAYER -> STORAGE_LOCATION
+        else -> throw IllegalArgumentException("Not a player character")
     }
 }
 
-private fun newPlayerCharacter(valueOfNewPosition: Char, playerCharacter: Char): Char {
+private fun newPlayerCharacter(valueOfNewPosition: SquareType): SquareType {
     return when (valueOfNewPosition) {
-        '*' -> 'P'
-        else -> 'p'
+        STORAGE_LOCATION -> STORAGE_LOCATION_WITH_PLAYER
+        else -> PLAYER
     }
 }
 
 private fun moveIsIllegal(
-    board: List<String>,
+    board: Board,
     newRowOfPlayer: Int,
     newColOfPlayer: Int
 ): Boolean {
     return when {
-        newColOfPlayer >= board[0].length -> true
+        newColOfPlayer >= board.getWidth() -> true
         newColOfPlayer < 0 -> true
-        newRowOfPlayer >= board.size -> true
+        newRowOfPlayer >= board.getHeight() -> true
         newRowOfPlayer < 0 -> true
-        board[newRowOfPlayer][newColOfPlayer] == '#' -> true
+        board[newRowOfPlayer, newColOfPlayer].type == WALL -> true
         else -> false
     }
 }
@@ -127,8 +141,8 @@ fun findPlayerSquareType(board: Board): SquareType {
         .type
 }
 
-private fun findPlayerColumn(board: List<String>, rowWithPlayer: Int, playerCharacter: Char) =
-    board[rowWithPlayer].indexOf(playerCharacter)
+private fun findPlayerColumn(board: Board, rowWithPlayer: Int) =
+    board.rows[rowWithPlayer].squares.indexOfFirst { it.type.isPlayer }
 
 private fun findPlayerRow(board: Board) =
     board.rows.indexOfFirst { it.squares.map { it.type.isPlayer }.contains(true) }
