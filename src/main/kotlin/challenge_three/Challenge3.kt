@@ -34,13 +34,7 @@ data class Row(val squares: List<Square>)
 
 data class Square(val type: SquareType = SquareType.EMPTY) {
     override fun toString(): String {
-        return when (type) {
-            SquareType.STORAGE_LOCATION_WITH_PLAYER -> "P"
-            SquareType.STORAGE_LOCATION -> "*"
-            SquareType.PLAYER -> "p"
-            SquareType.WALL -> "#"
-            SquareType.EMPTY -> " "
-        }
+        return type.toString()
     }
 
     companion object {
@@ -56,7 +50,11 @@ enum class SquareType(val code: Char) {
     PLAYER('p'),
     WALL('#'),
     STORAGE_LOCATION('*'),
-    STORAGE_LOCATION_WITH_PLAYER('P')
+    STORAGE_LOCATION_WITH_PLAYER('P');
+
+    override fun toString(): String {
+        return code.toString()
+    }
 }
 
 fun processSokobanMove(board: List<String>, move: Char): List<String> {
