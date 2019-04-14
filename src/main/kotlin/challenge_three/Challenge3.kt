@@ -15,35 +15,34 @@ enum class Direction(val code: Char, val verticalMovement: Int, val horizontalMo
     }
 }
 
-data class Board(val rows: List<Row>) {
+data class Board(val squares: List<Square>) {
     fun toArray(): List<String> {
-        return rows.map {
-            it.squares
-                .map { it.toString() }
-                .joinToString("")
-        }
+        return squares.groupBy { it.row }
+            .toSortedMap()
+            .map { it.value.sortedBy { it.col }.map { it.toString() }.joinToString("") }
     }
 
     fun getHeight(): Int {
-        return rows.size
+        return squares.maxBy { it.row }!!.row + 1
     }
 
     fun getWidth(): Int {
-        return rows[0].squares.size
+        return squares.maxBy { it.col }!!.col + 1
     }
 
     operator fun get(row: Int, column: Int): Square {
-        return rows[row].squares[column]
+        return squares.single { it.row == row && it.col == column }
     }
 
     companion object {
         fun from(input: List<String>): Board {
-            val rows = input.mapIndexed {rowIndex, row ->
-                Row(row.toCharArray().mapIndexed { colIndex, square ->
+            val squares = input.mapIndexed { rowIndex, row ->
+                row.toCharArray().mapIndexed { colIndex, square ->
                     Square(SquareType.from(square), rowIndex, colIndex)
-                })
-            }
-            return Board(rows)
+                }
+            }.flatten()
+
+            return Board(squares)
         }
     }
 }
@@ -85,7 +84,7 @@ fun processSokobanMove(input: List<String>, move: Char): List<String> {
     val playerCharacter = findPlayerSquareType(board)
 
     val rowOfPlayer = findPlayerRow(board)
-    val colOfPlayer = findPlayerColumn(board, rowOfPlayer)
+    val colOfPlayer = findPlayerColumn(board)
 
     val newColOfPlayer = colOfPlayer + direction.horizontalMovement
     val newRowOfPlayer = rowOfPlayer + direction.verticalMovement
@@ -142,14 +141,13 @@ private fun moveIsIllegal(
 }
 
 fun findPlayerSquareType(board: Board): SquareType {
-    return board.rows
-        .flatMap { it.squares }
+    return board.squares
         .single { it.type.isPlayer }
         .type
 }
 
-private fun findPlayerColumn(board: Board, rowWithPlayer: Int) =
-    board.rows[rowWithPlayer].squares.indexOfFirst { it.type.isPlayer }
+private fun findPlayerColumn(board: Board) =
+    board.squares.single { it.type.isPlayer }.col
 
 private fun findPlayerRow(board: Board) =
-    board.rows.indexOfFirst { it.squares.map { it.type.isPlayer }.contains(true) }
+    board.squares.single { it.type.isPlayer }.row

@@ -9,14 +9,12 @@ internal class BoardTest {
     fun `should return board as array of string rows`() {
         val board = Board(
             listOf(
-                Row(
-                    listOf(
-                        Square(EMPTY, 0, 0),
-                        Square(STORAGE_LOCATION, 0, 1),
-                        Square(STORAGE_LOCATION_WITH_PLAYER, 0, 2)
-                    )
-                ),
-                Row(listOf(Square(EMPTY, 1, 0), Square(WALL, 1, 1), Square(EMPTY, 1, 2)))
+                Square(EMPTY, 0, 0),
+                Square(STORAGE_LOCATION, 0, 1),
+                Square(STORAGE_LOCATION_WITH_PLAYER, 0, 2),
+                Square(EMPTY, 1, 0),
+                Square(WALL, 1, 1),
+                Square(EMPTY, 1, 2)
             )
         )
 
@@ -40,13 +38,8 @@ internal class BoardTest {
         val result = Board.from(input)
 
         assertEquals(
-            listOf(Square(EMPTY, 0, 0), Square(STORAGE_LOCATION, 0, 1), Square(STORAGE_LOCATION_WITH_PLAYER, 0, 2)),
-            result.rows[0].squares
-        )
-
-        assertEquals(
-            listOf(Square(EMPTY, 1, 0), Square(WALL, 1, 1), Square(EMPTY, 1, 2)),
-            result.rows[1].squares
+            listOf(Square(EMPTY, 0, 0), Square(STORAGE_LOCATION, 0, 1), Square(STORAGE_LOCATION_WITH_PLAYER, 0, 2), Square(EMPTY, 1, 0), Square(WALL, 1, 1), Square(EMPTY, 1, 2)),
+            result.squares
         )
     }
 
