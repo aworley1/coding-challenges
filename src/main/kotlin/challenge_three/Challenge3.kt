@@ -47,8 +47,6 @@ data class Board(val squares: List<Square>) {
     }
 }
 
-data class Row(val squares: List<Square>)
-
 data class Square(
     val type: SquareType = SquareType.EMPTY,
     val row: Int,
