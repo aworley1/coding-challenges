@@ -45,12 +45,12 @@ data class Square(val type: SquareType = SquareType.EMPTY) {
     }
 }
 
-enum class SquareType(val code: Char) {
-    EMPTY(' '),
-    PLAYER('p'),
-    WALL('#'),
-    STORAGE_LOCATION('*'),
-    STORAGE_LOCATION_WITH_PLAYER('P');
+enum class SquareType(val code: Char, val isPlayer: Boolean) {
+    EMPTY(' ', false),
+    PLAYER('p', true),
+    WALL('#', false),
+    STORAGE_LOCATION('*', false),
+    STORAGE_LOCATION_WITH_PLAYER('P', true);
 
     override fun toString(): String {
         return code.toString()
@@ -58,11 +58,12 @@ enum class SquareType(val code: Char) {
 }
 
 fun processSokobanMove(board: List<String>, move: Char): List<String> {
-    val direction = Direction.of(move.toUpperCase()) ?: return board
+    val parsedBoard = Board.from(board)
+    val direction = Direction.of(move.toUpperCase()) ?: return parsedBoard.toArray()
 
-    val playerCharacter = findPlayerCharacter(board)
+    val playerCharacter = findPlayerSquareType(parsedBoard).code
 
-    val rowOfPlayer = findPlayerRow(board, playerCharacter)
+    val rowOfPlayer = findPlayerRow(parsedBoard)
     val colOfPlayer = findPlayerColumn(board, rowOfPlayer, playerCharacter)
 
     val newColOfPlayer = colOfPlayer + direction.horizontalMovement
@@ -119,14 +120,15 @@ private fun moveIsIllegal(
     }
 }
 
-fun findPlayerCharacter(board: List<String>): Char {
-    val possiblePlayers = listOf('p', 'P')
-
-    return board.joinToString("").first { possiblePlayers.contains(it) }
+fun findPlayerSquareType(board: Board): SquareType {
+    return board.rows
+        .flatMap { it.squares }
+        .single { it.type.isPlayer }
+        .type
 }
 
 private fun findPlayerColumn(board: List<String>, rowWithPlayer: Int, playerCharacter: Char) =
     board[rowWithPlayer].indexOf(playerCharacter)
 
-private fun findPlayerRow(board: List<String>, playerCharacter: Char) =
-    board.indexOfFirst { it.contains(playerCharacter) }
+private fun findPlayerRow(board: Board) =
+    board.rows.indexOfFirst { it.squares.map { it.type.isPlayer }.contains(true) }
