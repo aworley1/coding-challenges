@@ -9,8 +9,14 @@ internal class BoardTest {
     fun `should return board as array of string rows`() {
         val board = Board(
             listOf(
-                Row(listOf(Square(), Square(STORAGE_LOCATION), Square(STORAGE_LOCATION_WITH_PLAYER))),
-                Row(listOf(Square(), Square(WALL), Square()))
+                Row(
+                    listOf(
+                        Square(EMPTY, 0, 0),
+                        Square(STORAGE_LOCATION, 0, 1),
+                        Square(STORAGE_LOCATION_WITH_PLAYER, 0, 2)
+                    )
+                ),
+                Row(listOf(Square(EMPTY, 1, 0), Square(WALL, 1, 1), Square(EMPTY, 1, 2)))
             )
         )
 
@@ -34,12 +40,12 @@ internal class BoardTest {
         val result = Board.from(input)
 
         assertEquals(
-            listOf(Square(), Square(STORAGE_LOCATION), Square(STORAGE_LOCATION_WITH_PLAYER)),
+            listOf(Square(EMPTY, 0, 0), Square(STORAGE_LOCATION, 0, 1), Square(STORAGE_LOCATION_WITH_PLAYER, 0, 2)),
             result.rows[0].squares
         )
 
         assertEquals(
-            listOf(Square(), Square(WALL), Square()),
+            listOf(Square(EMPTY, 1, 0), Square(WALL, 1, 1), Square(EMPTY, 1, 2)),
             result.rows[1].squares
         )
     }
@@ -73,62 +79,27 @@ internal class BoardTest {
 
 internal class SquareTest {
     @Test
-    fun `should convert empty square to string`() {
-        val square = Square()
-
-        assertEquals(" ", square.toString())
-    }
-
-    @Test
-    fun `should convert player square to string`() {
-        val square = Square(PLAYER)
-
-        assertEquals("p", square.toString())
-    }
-
-    @Test
-    fun `should convert storage location square to string`() {
-        val square = Square(STORAGE_LOCATION)
-
-        assertEquals("*", square.toString())
-    }
-
-    @Test
-    fun `should convert storage location and player square to string`() {
-        val square = Square(STORAGE_LOCATION_WITH_PLAYER)
-
-        assertEquals("P", square.toString())
-    }
-
-    @Test
-    fun `should convert wall square to string`() {
-        val square = Square(WALL)
-
-        assertEquals("#", square.toString())
-    }
-
-    @Test
     fun `should parse empty square`() {
-        assertEquals(Square(), Square.from(' '))
+        assertEquals(EMPTY, SquareType.from(' '))
     }
 
     @Test
     fun `should parse square with wall`() {
-        assertEquals(Square(WALL), Square.from('#'))
+        assertEquals(WALL, SquareType.from('#'))
     }
 
     @Test
     fun `should parse square with player`() {
-        assertEquals(Square(PLAYER), Square.from('p'))
+        assertEquals(PLAYER, SquareType.from('p'))
     }
 
     @Test
     fun `should parse square with player and storage location`() {
-        assertEquals(Square(STORAGE_LOCATION_WITH_PLAYER), Square.from('P'))
+        assertEquals(STORAGE_LOCATION_WITH_PLAYER, SquareType.from('P'))
     }
 
     @Test
     fun `should parse square with storage location`() {
-        assertEquals(Square(STORAGE_LOCATION), Square.from('*'))
+        assertEquals(STORAGE_LOCATION, SquareType.from('*'))
     }
 }

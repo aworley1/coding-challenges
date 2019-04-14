@@ -38,7 +38,11 @@ data class Board(val rows: List<Row>) {
 
     companion object {
         fun from(input: List<String>): Board {
-            val rows = input.map { Row(it.toCharArray().map { Square.from(it) }) }
+            val rows = input.mapIndexed {rowIndex, row ->
+                Row(row.toCharArray().mapIndexed { colIndex, square ->
+                    Square(SquareType.from(square), rowIndex, colIndex)
+                })
+            }
             return Board(rows)
         }
     }
@@ -46,16 +50,13 @@ data class Board(val rows: List<Row>) {
 
 data class Row(val squares: List<Square>)
 
-data class Square(val type: SquareType = SquareType.EMPTY) {
+data class Square(
+    val type: SquareType = SquareType.EMPTY,
+    val row: Int,
+    val col: Int
+) {
     override fun toString(): String {
         return type.toString()
-    }
-
-    companion object {
-        fun from(square: Char): Square {
-            val type = SquareType.values().single { it.code == square }
-            return Square(type)
-        }
     }
 }
 
@@ -68,6 +69,12 @@ enum class SquareType(val code: Char, val isPlayer: Boolean) {
 
     override fun toString(): String {
         return code.toString()
+    }
+
+    companion object {
+        fun from(square: Char): SquareType {
+            return values().single<SquareType> { it.code == square }
+        }
     }
 }
 
@@ -85,7 +92,7 @@ fun processSokobanMove(input: List<String>, move: Char): List<String> {
 
     if (moveIsIllegal(board, newRowOfPlayer, newColOfPlayer)) return board.toArray()
 
-    val valueOfNewPosition = board[newRowOfPlayer,newColOfPlayer].type
+    val valueOfNewPosition = board[newRowOfPlayer, newColOfPlayer].type
     val newPlayerCharacter = newPlayerCharacter(valueOfNewPosition)
 
     val replacementForOldPlayerCharacter = replacementForOldPlayerCharacter(playerCharacter)
