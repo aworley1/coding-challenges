@@ -220,4 +220,23 @@ internal class Challenge3KtTest {
 
         assertEquals(expectedResult, result)
     }
+
+    @Test
+    fun `should move a box to the next square`() {
+        val input = listOf(
+            "   ",
+            "pb ",
+            "   "
+        )
+
+        val result = processSokobanMove(input, 'R')
+
+        val expectedResult = listOf(
+            "   ",
+            " pb",
+            "   "
+        )
+
+        assertEquals(expectedResult, result)
+    }
 }

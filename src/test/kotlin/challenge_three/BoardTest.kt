@@ -186,6 +186,34 @@ internal class BoardTest {
 
         assertThrows<IllegalMoveException> { board.move(Direction.UP) }
     }
+
+    @Test
+    fun `should move a box one square across`() {
+        val board = Board(
+            listOf(
+                Square(EMPTY, 0, 0),
+                Square(PLAYER, 0, 1),
+                Square(BOX, 0, 2),
+                Square(EMPTY, 0, 3),
+                Square(EMPTY, 0, 4),
+                Square(EMPTY, 0, 5)
+            )
+        )
+
+        val result = board.move(Direction.RIGHT)
+
+        val expectedresult =
+            listOf(
+                Square(EMPTY, 0, 0),
+                Square(EMPTY, 0, 1),
+                Square(PLAYER, 0, 2),
+                Square(BOX, 0, 3),
+                Square(EMPTY, 0, 4),
+                Square(EMPTY, 0, 5)
+            ).toSet()
+
+        assertEquals(expectedresult, result.squares.toSet())
+    }
 }
 
 internal class SquareTest {
@@ -225,14 +253,18 @@ internal class SquareTest {
     }
 
     @Test
-    fun `should not allow adding a player to a square with a player or a wall`() {
+    fun `should not allow adding a player to a square with a player, box or wall`() {
         val player = Square(PLAYER, 0, 0)
         val storageLocationWithPlayer = Square(STORAGE_LOCATION_WITH_PLAYER, 0, 0)
         val wall = Square(WALL, 0, 0)
+        val box = Square(BOX, 0, 0)
+        val storageLocationWithBox = Square(STORAGE_LOCATION_WITH_BOX, 0, 0)
 
         assertThrows<IllegalArgumentException> { storageLocationWithPlayer.addPlayer() }
         assertThrows<IllegalArgumentException> { player.addPlayer() }
         assertThrows<IllegalMoveException> { wall.addPlayer() }
+        assertThrows<IllegalArgumentException> { box.addPlayer() }
+        assertThrows<IllegalArgumentException> { storageLocationWithBox.addPlayer() }
     }
 
     @Test
@@ -250,9 +282,63 @@ internal class SquareTest {
         val wall = Square(WALL, 0, 0)
         val empty = Square(EMPTY, 0, 0)
         val storageLocation = Square(STORAGE_LOCATION, 0, 0)
+        val box = Square(BOX, 0, 0)
+        val storageLocationWithBox = Square(STORAGE_LOCATION_WITH_BOX, 0, 0)
 
         assertThrows<IllegalArgumentException> { empty.removePlayer() }
         assertThrows<IllegalArgumentException> { storageLocation.removePlayer() }
         assertThrows<IllegalArgumentException> { wall.removePlayer() }
+        assertThrows<IllegalArgumentException> { box.removePlayer() }
+        assertThrows<IllegalArgumentException> { storageLocationWithBox.removePlayer() }
+    }
+
+    @Test
+    fun `should add a box to a Square`() {
+        val empty = Square(EMPTY, 0, 0)
+        val storageLocation = Square(STORAGE_LOCATION, 0, 0)
+
+        assertEquals(BOX, empty.addBox().type)
+        assertEquals(STORAGE_LOCATION_WITH_BOX, storageLocation.addBox().type)
+
+    }
+
+    @Test
+    fun `should not allow adding a box to a square with a player, box or wall`() {
+        val player = Square(PLAYER, 0, 0)
+        val storageLocationWithPlayer = Square(STORAGE_LOCATION_WITH_PLAYER, 0, 0)
+        val wall = Square(WALL, 0, 0)
+        val box = Square(BOX, 0, 0)
+        val storageLocationWithBox = Square(STORAGE_LOCATION_WITH_BOX, 0, 0)
+
+        assertThrows<IllegalArgumentException> { storageLocationWithPlayer.addBox() }
+        assertThrows<IllegalArgumentException> { player.addBox() }
+        assertThrows<IllegalMoveException> { wall.addBox() }
+        assertThrows<IllegalMoveException> { box.addBox() }
+        assertThrows<IllegalMoveException> { storageLocationWithBox.addBox() }
+    }
+
+    @Test
+    fun `should remove box from a Square`() {
+        val box = Square(BOX, 0, 0)
+        val storageLocationWithBox = Square(STORAGE_LOCATION_WITH_BOX, 0, 0)
+
+        assertEquals(EMPTY, box.removeBox().type)
+        assertEquals(STORAGE_LOCATION, storageLocationWithBox.removeBox().type)
+
+    }
+
+    @Test
+    fun `should not allow removing a box from a square with no box`() {
+        val wall = Square(WALL, 0, 0)
+        val empty = Square(EMPTY, 0, 0)
+        val storageLocation = Square(STORAGE_LOCATION, 0, 0)
+        val player = Square(PLAYER, 0, 0)
+        val storagelocationWithPlayer = Square(STORAGE_LOCATION_WITH_PLAYER, 0, 0)
+
+        assertThrows<IllegalArgumentException> { empty.removeBox() }
+        assertThrows<IllegalArgumentException> { storageLocation.removeBox() }
+        assertThrows<IllegalArgumentException> { wall.removeBox() }
+        assertThrows<IllegalArgumentException> { player.removeBox() }
+        assertThrows<IllegalArgumentException> { storagelocationWithPlayer.removeBox() }
     }
 }
