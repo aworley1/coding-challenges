@@ -32,35 +32,37 @@ data class Board(val squares: List<Square>) {
     }
 
     fun move(direction: Direction): Board {
-        val playerStartSquare = getPlayerSquare()
+        val playerStart = getPlayerSquare()
+        val playerDestination = getSquareInDirection(playerStart, direction)
 
-        val playerMoveToSquare = get(
-            row = playerStartSquare.row + direction.verticalMovement,
-            column = playerStartSquare.col + direction.horizontalMovement
-        )
+        if (playerDestination.type.isBox) {
+            val boxDestination = getSquareInDirection(playerDestination, direction)
+            val playerDestinationWithoutBox = playerDestination.removeBox()
 
-        if (playerMoveToSquare.type.isBox) {
-            val boxMoveToSquare = get(
-                row = playerMoveToSquare.row + direction.verticalMovement,
-                column = playerMoveToSquare.col + direction.horizontalMovement
-            )
-
-            val playerMoveToSquareWithoutBox = playerMoveToSquare.removeBox()
-
-            return this.removeSquare(boxMoveToSquare)
-                .removeSquare(playerMoveToSquare)
-                .addSquare(boxMoveToSquare.addBox())
-                .addSquare(playerMoveToSquareWithoutBox)
-                .removeSquare(playerStartSquare)
-                .removeSquare(playerMoveToSquareWithoutBox)
-                .addSquare(playerMoveToSquareWithoutBox.addPlayer())
-                .addSquare(playerStartSquare.removePlayer())
+            return this.removeSquare(boxDestination)
+                .removeSquare(playerDestination)
+                .addSquare(boxDestination.addBox())
+                .addSquare(playerDestinationWithoutBox)
+                .removeSquare(playerStart)
+                .removeSquare(playerDestinationWithoutBox)
+                .addSquare(playerDestinationWithoutBox.addPlayer())
+                .addSquare(playerStart.removePlayer())
         }
 
-        return this.removeSquare(playerStartSquare)
-            .removeSquare(playerMoveToSquare)
-            .addSquare(playerMoveToSquare.addPlayer())
-            .addSquare(playerStartSquare.removePlayer())
+        return this.removeSquare(playerStart)
+            .removeSquare(playerDestination)
+            .addSquare(playerDestination.addPlayer())
+            .addSquare(playerStart.removePlayer())
+    }
+
+    private fun getSquareInDirection(
+        square: Square,
+        direction: Direction
+    ): Square {
+        return get(
+            row = square.row + direction.verticalMovement,
+            column = square.col + direction.horizontalMovement
+        )
     }
 
     private fun removeSquare(square: Square): Board {
