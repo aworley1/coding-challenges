@@ -52,19 +52,6 @@ internal class BoardTest {
     }
 
     @Test
-    fun `should get height and width of board`() {
-        val input = listOf(
-            " *P",
-            " # "
-        )
-
-        val board = Board.from(input)
-
-        assertEquals(2, board.getHeight())
-        assertEquals(3, board.getWidth())
-    }
-
-    @Test
     fun `should get a square using coordinates`() {
         val input = listOf(
             " *P",

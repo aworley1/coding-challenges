@@ -23,14 +23,6 @@ data class Board(val squares: List<Square>) {
             .map { it.value.sortedBy { it.col }.map { it.toString() }.joinToString("") }
     }
 
-    fun getHeight(): Int {
-        return squares.maxBy { it.row }!!.row + 1
-    }
-
-    fun getWidth(): Int {
-        return squares.maxBy { it.col }!!.col + 1
-    }
-
     operator fun get(row: Int, column: Int): Square {
         return squares.singleOrNull { it.row == row && it.col == column } ?: throw IllegalMoveException("Not possible to move off the board")
     }
