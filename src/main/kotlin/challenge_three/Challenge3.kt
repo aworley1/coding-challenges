@@ -34,6 +34,32 @@ data class Board(val squares: List<Square>) {
         return squares.single { it.row == row && it.col == column }
     }
 
+    fun getPlayerSquare(): Square {
+        return squares.single { it.type.isPlayer }
+    }
+
+    fun move(direction: Direction): Board {
+        val playerStartSquare = getPlayerSquare()
+
+        val playerMoveToSquare = get(
+            row = playerStartSquare.row,
+            column = playerStartSquare.col + direction.horizontalMovement
+        )
+
+        return this.removeSquare(playerStartSquare)
+            .removeSquare(playerMoveToSquare)
+            .addSquare(playerMoveToSquare.addPlayer())
+            .addSquare(playerStartSquare.removePlayer())
+    }
+
+    private fun removeSquare(square: Square): Board {
+        return Board(squares.filterNot { it === square })
+    }
+
+    private fun addSquare(square: Square): Board {
+        return Board(squares + square)
+    }
+
     companion object {
         fun from(input: List<String>): Board {
             val squares = input.mapIndexed { rowIndex, row ->
@@ -55,6 +81,26 @@ data class Square(
     override fun toString(): String {
         return type.toString()
     }
+
+    fun addPlayer(): Square {
+        return when (type) {
+            EMPTY -> this.copy(type = PLAYER)
+            STORAGE_LOCATION -> this.copy(type = STORAGE_LOCATION_WITH_PLAYER)
+            WALL -> throw IllegalArgumentException("Cannot add a player to a wall")
+            PLAYER -> throw IllegalArgumentException("Cannot add a player to a player")
+            STORAGE_LOCATION_WITH_PLAYER -> throw IllegalArgumentException("Cannot add a player to a player")
+        }
+    }
+
+    fun removePlayer(): Square {
+        return when (type) {
+            EMPTY -> throw IllegalArgumentException("Cannot remove a player from this square")
+            STORAGE_LOCATION -> throw IllegalArgumentException("Cannot remove a player from this square")
+            WALL -> throw IllegalArgumentException("Cannot remove a player from this square")
+            PLAYER -> this.copy(type = EMPTY)
+            STORAGE_LOCATION_WITH_PLAYER -> this.copy(type = STORAGE_LOCATION)
+        }
+    }
 }
 
 enum class SquareType(val code: Char, val isPlayer: Boolean) {
@@ -70,7 +116,7 @@ enum class SquareType(val code: Char, val isPlayer: Boolean) {
 
     companion object {
         fun from(square: Char): SquareType {
-            return values().single<SquareType> { it.code == square }
+            return values().single { it.code == square }
         }
     }
 }

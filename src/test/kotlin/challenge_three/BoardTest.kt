@@ -3,6 +3,7 @@ package challenge_three
 import challenge_three.SquareType.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 internal class BoardTest {
     @Test
@@ -38,7 +39,14 @@ internal class BoardTest {
         val result = Board.from(input)
 
         assertEquals(
-            listOf(Square(EMPTY, 0, 0), Square(STORAGE_LOCATION, 0, 1), Square(STORAGE_LOCATION_WITH_PLAYER, 0, 2), Square(EMPTY, 1, 0), Square(WALL, 1, 1), Square(EMPTY, 1, 2)),
+            listOf(
+                Square(EMPTY, 0, 0),
+                Square(STORAGE_LOCATION, 0, 1),
+                Square(STORAGE_LOCATION_WITH_PLAYER, 0, 2),
+                Square(EMPTY, 1, 0),
+                Square(WALL, 1, 1),
+                Square(EMPTY, 1, 2)
+            ),
             result.squares
         )
     }
@@ -68,6 +76,41 @@ internal class BoardTest {
         assertEquals(STORAGE_LOCATION_WITH_PLAYER, board[0, 2].type)
         assertEquals(WALL, board[1, 1].type)
     }
+
+    @Test
+    fun `should move player one square to the right`() {
+        val input = listOf(
+            "########",
+            "#      #",
+            "#  p   #",
+            "########"
+        )
+
+        val board = Board.from(input)
+
+        val result = board.move(Direction.RIGHT)
+
+        val expectedBoard = listOf(
+            "########",
+            "#      #",
+            "#   p  #",
+            "########"
+        )
+
+        assertEquals(expectedBoard, result.toArray())
+
+    }
+
+    @Test
+    fun `should get the square with the player on`() {
+        val board = Board(listOf(Square(EMPTY, 0, 0), Square(PLAYER, 0, 1)))
+
+        val result = board.getPlayerSquare()
+
+        assertEquals(PLAYER, result.type)
+        assertEquals(0, result.row)
+        assertEquals(1, result.col)
+    }
 }
 
 internal class SquareTest {
@@ -94,5 +137,47 @@ internal class SquareTest {
     @Test
     fun `should parse square with storage location`() {
         assertEquals(STORAGE_LOCATION, SquareType.from('*'))
+    }
+
+    @Test
+    fun `should add a player to a Square`() {
+        val empty = Square(EMPTY, 0, 0)
+        val storageLocation = Square(STORAGE_LOCATION, 0, 0)
+
+        assertEquals(PLAYER, empty.addPlayer().type)
+        assertEquals(STORAGE_LOCATION_WITH_PLAYER, storageLocation.addPlayer().type)
+
+    }
+
+    @Test
+    fun `should not allow adding a player to a square with a player or a wall`() {
+        val player = Square(PLAYER, 0, 0)
+        val storageLocationWithPlayer = Square(STORAGE_LOCATION_WITH_PLAYER, 0, 0)
+        val wall = Square(WALL, 0, 0)
+
+        assertThrows<IllegalArgumentException> { storageLocationWithPlayer.addPlayer() }
+        assertThrows<IllegalArgumentException> { player.addPlayer() }
+        assertThrows<IllegalArgumentException> { wall.addPlayer() }
+    }
+
+    @Test
+    fun `should remove player from a Square`() {
+        val player = Square(PLAYER, 0, 0)
+        val storageLocationWithPlayer = Square(STORAGE_LOCATION_WITH_PLAYER, 0, 0)
+
+        assertEquals(EMPTY, player.removePlayer().type)
+        assertEquals(STORAGE_LOCATION, storageLocationWithPlayer.removePlayer().type)
+
+    }
+
+    @Test
+    fun `should not allow removing a player from a square with no player`() {
+        val wall = Square(WALL, 0, 0)
+        val empty = Square(EMPTY, 0, 0)
+        val storageLocation = Square(STORAGE_LOCATION, 0, 0)
+
+        assertThrows<IllegalArgumentException> { empty.removePlayer() }
+        assertThrows<IllegalArgumentException> { storageLocation.removePlayer() }
+        assertThrows<IllegalArgumentException> { wall.removePlayer() }
     }
 }
