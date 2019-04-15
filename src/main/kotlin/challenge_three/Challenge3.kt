@@ -32,7 +32,7 @@ data class Board(val squares: List<Square>) {
     }
 
     operator fun get(row: Int, column: Int): Square {
-        return squares.single { it.row == row && it.col == column }
+        return squares.singleOrNull { it.row == row && it.col == column } ?: throw IllegalMoveException("Not possible to move off the board")
     }
 
     fun getPlayerSquare(): Square {
@@ -126,36 +126,11 @@ fun processSokobanMove(input: List<String>, move: Char): List<String> {
     val board = Board.from(input)
     val direction = Direction.of(move.toUpperCase()) ?: return board.toArray()
 
-    val rowOfPlayer = findPlayerRow(board)
-    val colOfPlayer = findPlayerColumn(board)
-
-    val newColOfPlayer = colOfPlayer + direction.horizontalMovement
-    val newRowOfPlayer = rowOfPlayer + direction.verticalMovement
-
-    if (moveIsIllegal(board, newRowOfPlayer, newColOfPlayer)) return board.toArray()
-
-    return board.move(direction).toArray()
-}
-
-private fun moveIsIllegal(
-    board: Board,
-    newRowOfPlayer: Int,
-    newColOfPlayer: Int
-): Boolean {
-    return when {
-        newColOfPlayer >= board.getWidth() -> true
-        newColOfPlayer < 0 -> true
-        newRowOfPlayer >= board.getHeight() -> true
-        newRowOfPlayer < 0 -> true
-        board[newRowOfPlayer, newColOfPlayer].type == WALL -> true
-        else -> false
+    return try {
+        board.move(direction).toArray()
+    } catch (ex: IllegalMoveException) {
+        board.toArray()
     }
 }
-
-private fun findPlayerColumn(board: Board) =
-    board.squares.single { it.type.isPlayer }.col
-
-private fun findPlayerRow(board: Board) =
-    board.squares.single { it.type.isPlayer }.row
 
 class IllegalMoveException(override val message: String): Exception()

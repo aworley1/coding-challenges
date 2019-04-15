@@ -183,6 +183,22 @@ internal class BoardTest {
         assertEquals(0, result.row)
         assertEquals(1, result.col)
     }
+
+    @Test
+    fun `should not allow a player to move of the edge of the board`() {
+        val board = Board(
+            listOf(
+                Square(EMPTY, 0, 0),
+                Square(PLAYER, 0, 1),
+                Square(EMPTY, 0, 2),
+                Square(EMPTY, 1, 0),
+                Square(EMPTY, 1, 1),
+                Square(EMPTY, 1, 2)
+            )
+        )
+
+        assertThrows<IllegalMoveException> { board.move(Direction.UP) }
+    }
 }
 
 internal class SquareTest {
