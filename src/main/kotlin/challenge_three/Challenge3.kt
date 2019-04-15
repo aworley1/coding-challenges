@@ -125,8 +125,6 @@ fun processSokobanMove(input: List<String>, move: Char): List<String> {
     val board = Board.from(input)
     val direction = Direction.of(move.toUpperCase()) ?: return board.toArray()
 
-    val playerCharacter = findPlayerSquareType(board)
-
     val rowOfPlayer = findPlayerRow(board)
     val colOfPlayer = findPlayerColumn(board)
 
@@ -135,38 +133,7 @@ fun processSokobanMove(input: List<String>, move: Char): List<String> {
 
     if (moveIsIllegal(board, newRowOfPlayer, newColOfPlayer)) return board.toArray()
 
-    val valueOfNewPosition = board[newRowOfPlayer, newColOfPlayer].type
-    val newPlayerCharacter = newPlayerCharacter(valueOfNewPosition)
-
-    val replacementForOldPlayerCharacter = replacementForOldPlayerCharacter(playerCharacter)
-
-    return board.toArray().map { it.replace(playerCharacter.code, replacementForOldPlayerCharacter.code) }
-        .mapIndexed { index, row ->
-            if (index == newRowOfPlayer) {
-                row.replaceRange(
-                    startIndex = newColOfPlayer,
-                    endIndex = newColOfPlayer + 1,
-                    replacement = newPlayerCharacter.toString()
-                )
-            } else {
-                row
-            }
-        }
-}
-
-private fun replacementForOldPlayerCharacter(playerCharacter: SquareType): SquareType {
-    return when (playerCharacter) {
-        PLAYER -> EMPTY
-        STORAGE_LOCATION_WITH_PLAYER -> STORAGE_LOCATION
-        else -> throw IllegalArgumentException("Not a player character")
-    }
-}
-
-private fun newPlayerCharacter(valueOfNewPosition: SquareType): SquareType {
-    return when (valueOfNewPosition) {
-        STORAGE_LOCATION -> STORAGE_LOCATION_WITH_PLAYER
-        else -> PLAYER
-    }
+    return board.move(direction).toArray()
 }
 
 private fun moveIsIllegal(
@@ -182,12 +149,6 @@ private fun moveIsIllegal(
         board[newRowOfPlayer, newColOfPlayer].type == WALL -> true
         else -> false
     }
-}
-
-fun findPlayerSquareType(board: Board): SquareType {
-    return board.squares
-        .single { it.type.isPlayer }
-        .type
 }
 
 private fun findPlayerColumn(board: Board) =
