@@ -229,7 +229,7 @@ internal class SquareTest {
 
         assertThrows<IllegalArgumentException> { storageLocationWithPlayer.addPlayer() }
         assertThrows<IllegalArgumentException> { player.addPlayer() }
-        assertThrows<IllegalArgumentException> { wall.addPlayer() }
+        assertThrows<IllegalMoveException> { wall.addPlayer() }
     }
 
     @Test

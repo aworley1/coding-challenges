@@ -1,6 +1,7 @@
 package challenge_three
 
 import challenge_three.SquareType.*
+import kotlin.IllegalArgumentException
 
 enum class Direction(val code: Char, val verticalMovement: Int, val horizontalMovement: Int) {
     UP('U', -1, 0),
@@ -86,7 +87,7 @@ data class Square(
         return when (type) {
             EMPTY -> this.copy(type = PLAYER)
             STORAGE_LOCATION -> this.copy(type = STORAGE_LOCATION_WITH_PLAYER)
-            WALL -> throw IllegalArgumentException("Cannot add a player to a wall")
+            WALL -> throw IllegalMoveException("Cannot add a player to a wall")
             PLAYER -> throw IllegalArgumentException("Cannot add a player to a player")
             STORAGE_LOCATION_WITH_PLAYER -> throw IllegalArgumentException("Cannot add a player to a player")
         }
@@ -156,3 +157,5 @@ private fun findPlayerColumn(board: Board) =
 
 private fun findPlayerRow(board: Board) =
     board.squares.single { it.type.isPlayer }.row
+
+class IllegalMoveException(override val message: String): Exception()
