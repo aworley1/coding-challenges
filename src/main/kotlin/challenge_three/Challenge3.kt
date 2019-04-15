@@ -42,7 +42,7 @@ data class Board(val squares: List<Square>) {
         val playerStartSquare = getPlayerSquare()
 
         val playerMoveToSquare = get(
-            row = playerStartSquare.row,
+            row = playerStartSquare.row + direction.verticalMovement,
             column = playerStartSquare.col + direction.horizontalMovement
         )
 

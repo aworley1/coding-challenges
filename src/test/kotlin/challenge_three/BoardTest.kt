@@ -102,6 +102,78 @@ internal class BoardTest {
     }
 
     @Test
+    fun `should move player one square to the left`() {
+        val input = listOf(
+            "########",
+            "#      #",
+            "#  p   #",
+            "########"
+        )
+
+        val board = Board.from(input)
+
+        val result = board.move(Direction.LEFT)
+
+        val expectedBoard = listOf(
+            "########",
+            "#      #",
+            "# p    #",
+            "########"
+        )
+
+        assertEquals(expectedBoard, result.toArray())
+
+    }
+
+    @Test
+    fun `should move player one square up`() {
+        val input = listOf(
+            "########",
+            "#      #",
+            "#  p   #",
+            "########"
+        )
+
+        val board = Board.from(input)
+
+        val result = board.move(Direction.UP)
+
+        val expectedBoard = listOf(
+            "########",
+            "#  p   #",
+            "#      #",
+            "########"
+        )
+
+        assertEquals(expectedBoard, result.toArray())
+
+    }
+
+    @Test
+    fun `should move player one square down`() {
+        val input = listOf(
+            "########",
+            "#  p   #",
+            "#      #",
+            "########"
+        )
+
+        val board = Board.from(input)
+
+        val result = board.move(Direction.DOWN)
+
+        val expectedBoard = listOf(
+            "########",
+            "#      #",
+            "#  p   #",
+            "########"
+        )
+
+        assertEquals(expectedBoard, result.toArray())
+
+    }
+
+    @Test
     fun `should get the square with the player on`() {
         val board = Board(listOf(Square(EMPTY, 0, 0), Square(PLAYER, 0, 1)))
 
