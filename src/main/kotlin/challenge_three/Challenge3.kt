@@ -33,26 +33,29 @@ data class Board(val squares: List<Square>) {
 
     fun move(direction: Direction): Board {
         val playerStart = getPlayerSquare()
-        val playerDestination = getSquareInDirection(playerStart, direction)
+        val nextSquare = getSquareInDirection(playerStart, direction)
 
-        if (playerDestination.type.isBox) {
-            val boxDestination = getSquareInDirection(playerDestination, direction)
-            val playerDestinationWithoutBox = playerDestination.removeBox()
+        val board = moveBox(nextSquare, direction)
 
-            return this.removeSquare(boxDestination)
-                .removeSquare(playerDestination)
-                .addSquare(boxDestination.addBox())
-                .addSquare(playerDestinationWithoutBox)
-                .removeSquare(playerStart)
-                .removeSquare(playerDestinationWithoutBox)
-                .addSquare(playerDestinationWithoutBox.addPlayer())
-                .addSquare(playerStart.removePlayer())
-        }
+        return board.movePlayer(playerStart, direction)
+    }
 
-        return this.removeSquare(playerStart)
-            .removeSquare(playerDestination)
-            .addSquare(playerDestination.addPlayer())
-            .addSquare(playerStart.removePlayer())
+    private fun movePlayer(from: Square, direction: Direction): Board {
+        val to = this.getSquareInDirection(from, direction)
+
+        return this.removeSquare(from)
+            .removeSquare(to)
+            .addSquare(from.removePlayer())
+            .addSquare(to.addPlayer())
+    }
+
+    private fun moveBox(from: Square, direction: Direction): Board {
+        if (!from.type.isBox) return this
+        val to = this.getSquareInDirection(from, direction)
+        return this.removeSquare(from)
+            .removeSquare(to)
+            .addSquare(from.removeBox())
+            .addSquare(to.addBox())
     }
 
     private fun getSquareInDirection(
