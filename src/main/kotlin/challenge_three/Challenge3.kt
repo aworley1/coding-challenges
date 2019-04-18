@@ -116,11 +116,11 @@ data class Square(
 
     fun removePlayer(): Square {
         return when (type) {
+            PLAYER -> this.copy(type = EMPTY)
+            STORAGE_LOCATION_WITH_PLAYER -> this.copy(type = STORAGE_LOCATION)
             EMPTY -> throw IllegalArgumentException("Cannot remove a player from this square")
             STORAGE_LOCATION -> throw IllegalArgumentException("Cannot remove a player from this square")
             WALL -> throw IllegalArgumentException("Cannot remove a player from this square")
-            PLAYER -> this.copy(type = EMPTY)
-            STORAGE_LOCATION_WITH_PLAYER -> this.copy(type = STORAGE_LOCATION)
             BOX -> throw IllegalArgumentException("Cannot remove a player from this square")
             STORAGE_LOCATION_WITH_BOX -> throw IllegalArgumentException("Cannot remove a player from this square")
         }
@@ -131,10 +131,10 @@ data class Square(
             EMPTY -> this.copy(type = BOX)
             STORAGE_LOCATION -> this.copy(type = STORAGE_LOCATION_WITH_BOX)
             WALL -> throw IllegalMoveException("Cannot add a box to a wall")
-            PLAYER -> throw IllegalArgumentException("Cannot add a box to a player")
-            STORAGE_LOCATION_WITH_PLAYER -> throw IllegalArgumentException("Cannot add a box to a player")
             BOX -> throw IllegalMoveException("Cannot add a box to a box")
             STORAGE_LOCATION_WITH_BOX -> throw IllegalMoveException("Cannot add a box to a box")
+            PLAYER -> throw IllegalArgumentException("Cannot add a box to a player")
+            STORAGE_LOCATION_WITH_PLAYER -> throw IllegalArgumentException("Cannot add a box to a player")
         }
     }
 
