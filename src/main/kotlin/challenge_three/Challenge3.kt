@@ -178,4 +178,8 @@ fun processSokobanMove(input: List<String>, move: Char): List<String> {
     }
 }
 
+fun hasPlayerWon(board: List<String>): Boolean {
+    return !board.joinToString("").contains('b')
+}
+
 class IllegalMoveException(override val message: String) : Exception()

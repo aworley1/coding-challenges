@@ -239,4 +239,37 @@ internal class Challenge3KtTest {
 
         assertEquals(expectedResult, result)
     }
+
+    @Test
+    fun `should not declare a winner when there are boxes not on storage locations`() {
+        val board = listOf(
+            "  b  *",
+            "  b  *",
+            "p    B"
+        )
+
+        assertEquals(false, hasPlayerWon(board))
+    }
+
+    @Test
+    fun `should declare a winner when there are only boxes on storage locations`() {
+        val board = listOf(
+            "     B",
+            "     B",
+            "p    B"
+        )
+
+        assertEquals(true, hasPlayerWon(board))
+    }
+
+    @Test
+    fun `should not declare a winner when there are no boxes`() {
+        val board = listOf(
+            "      ",
+            "      ",
+            "p     "
+        )
+
+        assertEquals(true, hasPlayerWon(board))
+    }
 }
