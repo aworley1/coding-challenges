@@ -19,7 +19,7 @@ internal class BoardTest {
             )
         )
 
-        val result = board.toArray()
+        val result = board.toList()
 
         val expectedResult = listOf(
             " *P",
@@ -84,7 +84,7 @@ internal class BoardTest {
             "########"
         )
 
-        assertEquals(expectedBoard, result.toArray())
+        assertEquals(expectedBoard, result.toList())
 
     }
 
@@ -108,7 +108,7 @@ internal class BoardTest {
             "########"
         )
 
-        assertEquals(expectedBoard, result.toArray())
+        assertEquals(expectedBoard, result.toList())
 
     }
 
@@ -132,7 +132,7 @@ internal class BoardTest {
             "########"
         )
 
-        assertEquals(expectedBoard, result.toArray())
+        assertEquals(expectedBoard, result.toList())
 
     }
 
@@ -156,7 +156,7 @@ internal class BoardTest {
             "########"
         )
 
-        assertEquals(expectedBoard, result.toArray())
+        assertEquals(expectedBoard, result.toList())
 
     }
 

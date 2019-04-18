@@ -16,10 +16,14 @@ enum class Direction(val code: Char, val verticalMovement: Int, val horizontalMo
 }
 
 data class Board(val squares: List<Square>) {
-    fun toArray(): List<String> {
-        return squares.groupBy { it.row }
-            .toSortedMap()
-            .map { it.value.sortedBy { it.col }.map { it.toString() }.joinToString("") }
+    fun toList(): List<String> {
+        //not using toSortedMap because it's not supported in Kotlin/JS
+        val sortedRows = squares.groupBy { it.row }
+            .toList()
+            .sortedBy { it.first }
+
+        return sortedRows
+            .map { it.second.sortedBy { it.col }.map { it.toString() }.joinToString("") }
     }
 
     operator fun get(row: Int, column: Int): Square {
@@ -79,7 +83,7 @@ data class Board(val squares: List<Square>) {
     companion object {
         fun from(input: List<String>): Board {
             val squares = input.mapIndexed { rowIndex, row ->
-                row.toCharArray().mapIndexed { colIndex, square ->
+                row.mapIndexed { colIndex, square ->
                     Square(SquareType.from(square), rowIndex, colIndex)
                 }
             }.flatten()
@@ -169,12 +173,12 @@ enum class SquareType(val code: Char, val isPlayer: Boolean, val isBox: Boolean)
 
 fun processSokobanMove(input: List<String>, move: Char): List<String> {
     val board = Board.from(input)
-    val direction = Direction.of(move.toUpperCase()) ?: return board.toArray()
+    val direction = Direction.of(move.toUpperCase()) ?: return board.toList()
 
     return try {
-        board.move(direction).toArray()
+        board.move(direction).toList()
     } catch (ex: IllegalMoveException) {
-        board.toArray()
+        board.toList()
     }
 }
 
