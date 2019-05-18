@@ -1,6 +1,13 @@
 package challenge_five
 
 fun getGridStatus(board: List<String>): String {
-    if (board.none { it.contains(".") }) return "Draw"
-    return "Yellow plays next"
+    return when {
+        board.isFull() -> "Draw"
+        board.hasPiece("R") ->"Yellow plays next"
+        else -> "Red plays next"
+    }
 }
+
+private fun List<String>.isFull() = this.none { it.contains(".") }
+
+private fun List<String>.hasPiece(piece: String) = this.any { it.contains(piece) }
