@@ -12,4 +12,13 @@ internal class Challenge5Test {
 
         assertEquals("Draw", result)
     }
+
+    @Test
+    fun `should return yellow plays next if red has just played`() {
+        val board = listOf("ryR.", "ryry")
+
+        val result = getGridStatus(board)
+
+        assertEquals("Yellow plays next", result)
+    }
 }
