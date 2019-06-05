@@ -26,4 +26,12 @@ internal class Challenge6KtTest {
         assertEquals(emptyList<Int>(), result)
     }
 
+    @Test
+    fun `should return even numbers`() {
+        val inputList = listOf(1, 2, 3, 4, 5, 6)
+        val result = myfilter(inputList) { it % 2 == 0 }
+
+        assertEquals(listOf(2, 4, 6), result)
+    }
+
 }
