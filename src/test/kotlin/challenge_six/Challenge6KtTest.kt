@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Test
 internal class Challenge6KtTest {
     @Test
     fun `should return an empty list when given an empty list`() {
-        val result = myFilter(emptyList()) { true }
+        val result = myFilter(emptyList<Int>()) { true }
         assertEquals(emptyList<Int>(), result)
     }
 
@@ -32,6 +32,14 @@ internal class Challenge6KtTest {
         val result = myFilter(inputList) { it % 2 == 0 }
 
         assertEquals(listOf(2, 4, 6), result)
+    }
+
+    @Test
+    fun `should filter a list of strings`() {
+        val inputList = listOf("a", "a", "b", "c")
+        val result = myFilter(inputList) { it == "a" }
+
+        assertEquals(listOf("a", "a"), result)
     }
 
 }

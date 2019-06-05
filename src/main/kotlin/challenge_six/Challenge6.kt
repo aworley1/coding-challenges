@@ -1,6 +1,6 @@
 package challenge_six
 
-fun myFilter(input: List<Int>, condition: (Int) -> Boolean): List<Int> {
+fun <T> myFilter(input: List<T>, condition: (T) -> Boolean): List<T> {
     return when (input.size) {
         0 -> emptyList()
         1 -> elementIfItMatchesCondition(input.single(), condition)
@@ -8,6 +8,6 @@ fun myFilter(input: List<Int>, condition: (Int) -> Boolean): List<Int> {
     }
 }
 
-fun elementIfItMatchesCondition(element: Int, condition: (Int) -> Boolean): List<Int> {
+fun <T> elementIfItMatchesCondition(element: T, condition: (T) -> Boolean): List<T> {
     return if (condition(element)) listOf(element) else emptyList()
 }
