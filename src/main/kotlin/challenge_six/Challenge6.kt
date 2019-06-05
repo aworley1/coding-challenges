@@ -4,11 +4,15 @@ fun myFilter(input: List<Int>, condition: (Int) -> Boolean): List<Int> {
     if (input.isEmpty()) return emptyList()
 
     if (input.size == 1) {
-        if (condition(input.single())) return listOf(input.single()) else return emptyList()
+        return elementIfItMatchesCondition(input.single(), condition)
     }
 
-    val firstItemFiltered = if (condition(input[0])) listOf(input[0]) else emptyList()
+    val firstItemFiltered = elementIfItMatchesCondition(input[0], condition)
 
     return firstItemFiltered + myFilter(input.drop(1), condition)
 
+}
+
+fun elementIfItMatchesCondition(element: Int, condition: (Int) -> Boolean): List<Int> {
+    return if (condition(element)) listOf(element) else emptyList()
 }
