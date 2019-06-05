@@ -7,9 +7,7 @@ fun myFilter(input: List<Int>, condition: (Int) -> Boolean): List<Int> {
         return elementIfItMatchesCondition(input.single(), condition)
     }
 
-    val firstItemFiltered = elementIfItMatchesCondition(input[0], condition)
-
-    return firstItemFiltered + myFilter(input.drop(1), condition)
+    return elementIfItMatchesCondition(input[0], condition) + myFilter(input.drop(1), condition)
 
 }
 
