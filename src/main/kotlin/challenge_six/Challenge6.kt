@@ -1,10 +1,10 @@
 package challenge_six
 
-fun <T> myFilter(input: List<T>, condition: (T) -> Boolean): List<T> {
-    return when (input.size) {
+fun <T> List<T>.myFilter(condition: (T) -> Boolean): List<T> {
+    return when (this.size) {
         0 -> emptyList()
-        1 -> elementIfItMatchesCondition(input.single(), condition)
-        else -> elementIfItMatchesCondition(input.first(), condition) + myFilter(input.drop(1), condition)
+        1 -> elementIfItMatchesCondition(this.single(), condition)
+        else -> elementIfItMatchesCondition(this.first(), condition) + this.drop(1).myFilter(condition)
     }
 }
 
