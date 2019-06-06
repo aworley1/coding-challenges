@@ -8,6 +8,16 @@ fun <T> List<T>.myFilter(condition: (T) -> Boolean): List<T> {
     }
 }
 
-fun <T> elementIfItMatchesCondition(element: T, condition: (T) -> Boolean): List<T> {
+inline fun <T> elementIfItMatchesCondition(element: T, condition: (T) -> Boolean): List<T> {
     return if (condition(element)) listOf(element) else emptyList()
+}
+
+inline fun <T> List<T>.myFilterMutable(condition: (T) -> Boolean): List<T> {
+    val output = mutableListOf<T>()
+
+    this.forEach {
+        output += elementIfItMatchesCondition(it, condition)
+    }
+
+    return output.toList()
 }
