@@ -1,15 +1,16 @@
 package challenge_nine
 
-import challenge_nine.TransactionType.*
+import challenge_nine.TransactionReason.*
+import challenge_nine.TransactionType.CREDIT
+import challenge_nine.TransactionType.DEBIT
 
 data class GameLedger(val transactions: MutableList<Transaction> = mutableListOf()) {
     fun addStaringBalance(player: Player, amount: Int) {
         transactions.add(
             Transaction(
                 player = player,
-                credit = amount,
-                debit = 0,
-                type = STARTING_BALANCE
+                financialAmount = FinancialAmount(amount, CREDIT),
+                reason = STARTING_BALANCE
             )
         )
     }
@@ -18,29 +19,50 @@ data class GameLedger(val transactions: MutableList<Transaction> = mutableListOf
         transactions.add(
             Transaction(
                 player = player,
-                credit = amount,
-                debit = 0,
-                type = BANK_PAYS_FEE
+                financialAmount = FinancialAmount(amount, CREDIT),
+                reason = BANK_PAYS_FEE
             )
         )
     }
 
     fun payRent(from: Player, to: Player, amount: Int) {
-        transactions.add(Transaction(player = from, credit = 0, debit = amount, type = PAY_RENT))
-        transactions.add(Transaction(player = to, credit = amount, debit = 0, type = RECEIVE_RENT))
+        transactions.add(
+            Transaction(
+                player = from,
+                financialAmount = FinancialAmount(amount, DEBIT),
+                reason = PAY_RENT
+            )
+        )
+        transactions.add(
+            Transaction(
+                player = to,
+                financialAmount = FinancialAmount(amount, CREDIT),
+                reason = RECEIVE_RENT
+            )
+        )
     }
 }
 
 data class Transaction(
     val player: Player,
-    val credit: Int,
-    val debit: Int,
+    val financialAmount: FinancialAmount,
+    val reason: TransactionReason
+)
+
+data class FinancialAmount(
+    val amount: Int,
     val type: TransactionType
 )
 
-enum class TransactionType {
+enum class TransactionReason {
     STARTING_BALANCE,
     BANK_PAYS_FEE,
     PAY_RENT,
     RECEIVE_RENT
+
+}
+
+enum class TransactionType {
+    CREDIT,
+    DEBIT
 }
