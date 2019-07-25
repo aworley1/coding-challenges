@@ -58,4 +58,15 @@ internal class GameLedgerTest {
         assertThat(ledger.transactions[1].financialAmount.type).isEqualTo(CREDIT)
 
     }
+
+    @Test
+    fun `should add transaction to purchase location`() {
+        val ledger = GameLedger()
+        val player = Player(1)
+
+        ledger.purchaseLocation(player)
+
+        assertThat(ledger.transactions[0].player).isEqualTo(player)
+        assertThat(ledger.transactions[0].reason).isEqualTo(PURCHASE_LOCATION)
+    }
 }

@@ -41,6 +41,16 @@ data class GameLedger(val transactions: MutableList<Transaction> = mutableListOf
             )
         )
     }
+
+    fun purchaseLocation(player: Player) {
+        transactions.add(
+            Transaction(
+                player = player,
+                financialAmount = FinancialAmount(0, DEBIT),
+                reason = PURCHASE_LOCATION
+            )
+        )
+    }
 }
 
 data class Transaction(
@@ -58,8 +68,8 @@ enum class TransactionReason {
     STARTING_BALANCE,
     BANK_PAYS_FEE,
     PAY_RENT,
-    RECEIVE_RENT
-
+    RECEIVE_RENT,
+    PURCHASE_LOCATION
 }
 
 enum class TransactionType {
